@@ -1,0 +1,11 @@
+{
+  "name": "ts-kit",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "^1.2.19"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}
