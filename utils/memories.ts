@@ -9,6 +9,7 @@ interface memories<Fn extends AnyFunc>{
     (this:ThisParameterType<Fn>,...args:Parameters<Fn>):ReturnType<Fn>;
     cache:cache;
 }
+
 class LRUCache<K=any,V=any> implements cache<K,V>{
     private map:Map<K,{value:V,timeStamp:number}>=new Map();
     capacity:number
@@ -31,6 +32,7 @@ class LRUCache<K=any,V=any> implements cache<K,V>{
        }
        this.map.set(k,{value:v,timeStamp:Date.now()});
        if(this.map.size>this.capacity){
+        // map.keys 返回一个迭代器，其元素顺序为插入顺序，此处取第一个元素即为最老的元素
            const oldestKey=this.map.keys().next().value;
            this.map.delete(oldestKey!);
        }
@@ -43,8 +45,20 @@ class LRUCache<K=any,V=any> implements cache<K,V>{
  * 
  * @param fn 需要记忆化的函数
  * @param resolver 用于生成key的函数，如果不提供则使用第一个参数作为key
- 
- * @returns 缓存后的函数
+ * @returns 记忆化后的函数,可以通过 cache 属性访问缓存
+ * @example
+ * const fib={
+ *  fibonacci(n:number):number{
+ *      if(n<=1) return n;
+ *      return this.fibonacci(n-1)+this.fibonacci(n-2);
+ *  }
+ * }
+ * const memoziedFibonacci=memories(fib.fibonacci,(n:number)=>n);
+ * memoziedFibonacci.cache=new LRUCache({capacity:3});
+ * fib.fibonacci=memoziedFibonacci;
+ * console.time('memoziedFibonacci');
+ * console.log(fib.fibonacci(10000));
+ * console.timeEnd('memoziedFibonacci');
  */
 function memories<Fn extends AnyFunc>(fn:Fn,resolver:AnyFunc|null=null):memories<Fn>{
     if(!(fn instanceof Function)) throw new Error('fn must be a function');

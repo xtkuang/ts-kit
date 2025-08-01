@@ -2,8 +2,15 @@
   "name": "ts-kit",
   "module": "index.ts",
   "type": "module",
+  "script":{
+    "test":"jest"
+  },
   "devDependencies": {
-    "@types/bun": "^1.2.19"
+    "@types/bun": "^1.2.19",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.0.5",
+    "ts-jest": "^29.4.0",
+    "tsd": "^0.32.0"
   },
   "peerDependencies": {
     "typescript": "^5"
